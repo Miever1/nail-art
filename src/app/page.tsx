@@ -34,7 +34,7 @@ export default function Home() {
           View More
         </Button>
         <Box position="absolute" bottom="100px" right="0" zIndex={-1}>
-          <Image src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp" alt="Nail Art" width={480} height={360} />
+          <Image src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp" alt="Nail Art" width={480} height={360} unoptimized />
         </Box>
        </Box>
 

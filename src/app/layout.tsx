@@ -37,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                           fill
                           sizes="40px"
                           priority
+                          unoptimized
                         />
                       </Box>
                       <Text fontWeight="semibold" display={{ base: "none", md: "block" }}>
