@@ -1,0 +1,31 @@
+name: Production
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  Production-Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: 18
+      - uses: skiddph/actions-env@v1.0.2
+        with:
+          prefix: ""
+        env:
+          APPLICATION_ID: '${{ secrets.APPLICATION_ID }}'
+          CLIENT_TOKEN: '${{ secrets.CLIENT_TOKEN }}'
+      - run: npm install
+      - run: npm run-script build
+
+      - uses: wlixcc/SFTP-Deploy-Action@v1.0 
+        with:  
+          username: 'ubuntu'
+          server: '${{ secrets.SERVER_IP }}'
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local_path: './.next/*'
+          remote_path: '/home/ubuntu/nail-art'

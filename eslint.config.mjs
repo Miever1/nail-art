@@ -20,6 +20,11 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    rules: {
+      "@typescript-eslint/no-empty-object-type": "off", // 或 "warn"
+    },
+  },
 ];
 
 export default eslintConfig;
