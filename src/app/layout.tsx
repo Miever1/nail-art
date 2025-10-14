@@ -7,6 +7,8 @@ import { Provider } from "@/components/ui/provider";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { Box, Flex, HStack, Text, Container, Field, Input, Group, Button } from "@chakra-ui/react";
 
+import { MenuBar } from "./MenuBar";
+
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
@@ -16,13 +18,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const menuItems = [
-    { label: "Home", href: "/" },
-    { label: "Tutorials", href: "/tutorials" },
-    { label: "Blog", href: "/blog" },
-    { label: "Inspo", href: "/inspo" },
-  ];
-
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
@@ -48,15 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       </Text>
                     </HStack>
                   </NextLink>
-                  <HStack as="ul" gap={8} listStyleType="none" m={0} display={{ base: "none", md: "flex" }}>
-                    {menuItems.map((item) => (
-                      <Box as="li" key={item.href}>
-                        <NextLink href={item.href} passHref>
-                          {item.label}
-                        </NextLink>
-                      </Box>
-                    ))}
-                  </HStack>
+                  <MenuBar />
                 </Box>
                 <Box>
                   <ColorModeButton />

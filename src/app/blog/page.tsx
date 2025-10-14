@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import PageHero from "@/components/customize/PageHero";
 
+import { blogPosts } from "../static-data/nail-info";
+
 export default function BlogPage() {
   return (
     <Box p={24}>
@@ -19,19 +21,24 @@ export default function BlogPage() {
         />
         <SimpleGrid gap={2} columns={{ base: 1, sm: 2, md: 3, lg: 4 }}>
             {
-                Array.from({ length: 6 }).map((_, index) => (
+                blogPosts.map((post, index) => (
                     <Card.Root key={index} overflow="hidden" size="lg">
                         <Card.Body>
                             <Box position="relative">
-                                <Image src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp" alt="Nail Art" width={400} height={300} />
-                                <Float right="2" top="-4">
-                                    <Tag.Root size="sm" colorPalette="cyan">
-                                        <Tag.Label>Category</Tag.Label>
-                                    </Tag.Root>
-                                </Float>
+                            <Image
+                                src={post.imageUrl} alt={post.title} w={320} h={320}  />
+                            <Box 
+                                position="absolute" 
+                                top={4} 
+                                left={4} 
+                            >
+                                <Tag.Root size="sm" colorPalette="cyan">
+                                <Tag.Label>{post.tag}</Tag.Label>
+                                </Tag.Root>
                             </Box>
-                            <Card.Title mt="2">Nue Camp</Card.Title>
-                            <Text mb={4}>This is a brief summary of the blog post content. It provides an overview of what the post is about.</Text>
+                            </Box>
+                            <Card.Title mt="2">{post.title}</Card.Title>
+                            <Text mb={4}>{post.summary}</Text>
                         </Card.Body>
                     </Card.Root>
                 ))
