@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { Box, Image, Float, Drawer, Portal, Avatar, Text, HStack, Stack, Heading, SimpleGrid } from "@chakra-ui/react";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
+import { nailInfo, StructuedNailInfo } from "../../app/static-data/nail-info";
 
 const Masonry = dynamic(() => import('react-layout-masonry'), { ssr: false });
 
@@ -15,34 +16,51 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
     reactive = false
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [activeInfo, setActiveInfo] = useState<{ like: boolean;  } | null>(null);
-    console.log(activeInfo);
+    const [activeInfo, setActiveInfo] = useState<StructuedNailInfo | null>(null);
+
+    const data = nailInfo.map((item, index) => {
+        const { title, imagesNum } = item;
+        const structuedData = {
+            title,
+            id: title.replace(/\s+/g, "-"),
+            images: Array.from({ length: imagesNum }).map((_, imgIndex) => ({
+                src: `https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/types/${title.replace(/\s+/g, "+")}/${imgIndex + 1}.jpg`,
+                alt: `${title} Image ${imgIndex + 1}`
+            }))
+        }
+        return structuedData;
+    });
+
     return (
         <Box my={16}>
             <Masonry columns={{ 640: 1, 768: 2, 1024: 3, 1280: 5 }} gap={16}>
-            {Array.from({ length: 9 }).map((_, index) => (
-                <Box key={index} mb="4" position="relative">
+            {data.map((item, index) => (
+                <Box key={index} mb="4" position="relative" cursor="pointer">
                     <Image
-                        src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp"
-                        alt="Nail Art"
+                        src={item.images[0].src}
+                        alt={item.title}
+                        w="294px"
+                        h="294px"
                         onClick={() => {
                             setIsOpen(true);
                             setActiveInfo({ 
-                                like: index % 2 === 0
+                                like: index % 2 === 0,
+                                imagesNum: item.images.length,
+                                ...item
                             });
                         }}
                     />
                     {
                         reactive ? (
-                            <Float right="2" top="-4">
-                                <Box borderRadius="50%" w={8} h={8} bg="var(--mix-background)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
+                            <Float right="6" top="6">
+                                <Box borderRadius="50%" w={8} h={8} bg="var(--chakra-colors-white)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
                                     {index % 2 === 0 ? <FaHeart /> : <FaRegHeart />}
                                 </Box>
                             </Float>
                         ) : null
                     }
                 </Box>
-            ))}
+            ))} 
             </Masonry>
             <Drawer.Root
                 size="xl"
@@ -75,27 +93,27 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                             <Drawer.Body>
                                 <Box mb="4" position="relative">
                                     <Image
-                                        src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp"
+                                        src={activeInfo?.images[0].src || ''}
                                         alt="Nail Art"
                                         onClick={() => {
                                             setIsOpen(true);
                                         }}
                                     />
-                                    <Float right="2">
-                                        <Box borderRadius="50%" w={8} h={8} bg="var(--mix-background)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
+                                    <Float right="8" top="8">
+                                        <Box borderRadius="50%" w={8} h={8} bg="var(--chakra-colors-white)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
                                             {activeInfo?.like ? <FaHeart /> : <FaRegHeart />}
                                         </Box>
                                     </Float>
                                 </Box>
                                 <Heading mb="4" size="2xl">
-                                    Related Inspo
+                                    Details
                                 </Heading>
                                 <SimpleGrid columns={{ base: 1, md: 3 }} gap="4">
-                                    {Array.from({ length: 3 }).map((_, index) => (
+                                    {activeInfo?.images.map((image, index) => (
                                         <Box key={index} mb="4" position="relative">
                                             <Image
-                                                src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp"
-                                                alt="Nail Art"
+                                                src={image.src}
+                                                alt={image.alt}
                                             />
                                         </Box>
                                     ))}

@@ -1,8 +1,9 @@
+"use client";
+import React, { useRef } from "react";
 import { 
   Box, 
   Flex,
   Stack, 
-  Heading, 
   Text, 
   Button, 
   Card,
@@ -12,9 +13,11 @@ import {
   ScrollArea
 } from "@chakra-ui/react";
 import MasonrySection from "@/components/customize/MasonrySection";
+import { videoInfo } from "./static-data/nail-info";
 
 
 export default function Home() {
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const statsItems = [
     {
       label: "Tutorials",
@@ -42,7 +45,7 @@ export default function Home() {
           </Text>
           <Box display="flex">
             <Box minW="360px">
-              <Text fontSize={36} mb={64}>
+              <Text fontSize={36} mb={16}>
                 Easy lessons, expert advice, and endless designs to bring your nail art vision to life.
               </Text>
               <Button colorPalette="cyan" variant="surface">
@@ -65,22 +68,30 @@ export default function Home() {
       <Stack p="24">
         <Box>
           <Box >
-            <Text textStyle="xl">For you</Text>
+            <Text textStyle="xl" fontWeight={600}>For you</Text>
           </Box>
           <Box>
             <ScrollArea.Root>
               <ScrollArea.Viewport>
                 <ScrollArea.Content py="4">
                     <Flex gap="4" flexWrap="nowrap">
-                      {Array.from({ length: 6 }).map((_, index) => (
+                      {videoInfo.map((item, index) => (
                           <Card.Root key={index} minW="400px" maxW="400px">
                             <Card.Body>
-                              <Image src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp" alt="Nail Art" width={400} height={300} />
-                              <Card.Title mt="2">Nue Camp</Card.Title>
+                              <video 
+                                src={item.url} 
+                                controls
+                                ref={el => { videoRefs.current[index] = el; }}
+                                onPlay={() => {
+                                  videoRefs.current.forEach((v, i) => {
+                                    if (i !== index && v && !v.paused) v.pause();
+                                  });
+                                }}
+                                style={{ width: '100%', borderRadius: '8px' }} 
+                              />
+                              <Card.Title mt="2">{item.title}</Card.Title>
                               <Card.Description>
-                                This is the card body. Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Curabitur nec odio vel dui euismod fermentum.
-                                Curabitur nec odio vel dui euismod fermentum.
+                                {item.description}
                               </Card.Description>
                             </Card.Body>
                           </Card.Root>
