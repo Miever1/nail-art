@@ -23,7 +23,7 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
     if (maxItemNum && structuedData.length > maxItemNum) {
         structuedData = structuedData.slice(0, maxItemNum);
     }
-    const data = structuedData.map((item, index) => {
+    const data = structuedData.map((item) => {
         const { title, imagesNum } = item;
         const structuedData = {
             title,

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Box, Container, Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import PageHero from "@/components/customize/PageHero";
 import MasonrySection from "@/components/customize/MasonrySection";
 

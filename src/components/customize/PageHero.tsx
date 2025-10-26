@@ -1,7 +1,6 @@
 import React from "react";
-import { Flex, Heading, Text, Group, Input, IconButton, Tag } from "@chakra-ui/react";
+import { Flex, Heading, Text, Group, Input, Tag } from "@chakra-ui/react";
 
-import { FaFilter } from "react-icons/fa";
 
 interface PageHeroProps {
     title: string;

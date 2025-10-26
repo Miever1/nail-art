@@ -13,7 +13,9 @@ import { FaArrowLeft, FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import TutorialsList from "../tutorials-list";
 
-export default function TutorialDetailClient({ video }: { video: any }) {
+import { TutorialVideo } from "../../static-data/nail-info";
+
+export default function TutorialDetailClient({ video }: { video: TutorialVideo }) {
   const [liked, setLiked] = useState(false);
   const router = useRouter();
 

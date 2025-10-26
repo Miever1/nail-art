@@ -15,10 +15,11 @@ import {
 import { useRouter } from "next/navigation";
 import MasonrySection from "@/components/customize/MasonrySection";
 import { videoInfo } from "./static-data/nail-info";
-
 import { blogPosts } from "./static-data/nail-info";
+import { useColorMode } from "@/components/ui/color-mode";
 
 export default function Home() {
+  const { colorMode } = useColorMode();
   const router = useRouter();
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const statsItems = [
@@ -62,9 +63,9 @@ export default function Home() {
           </Box>
         </Box>
       </Stack>
-      <Stack direction="row" backgroundColor="#00B1F1">
+      <Stack direction="row" my={6} backgroundColor={colorMode === "light" ? "#00B1F1" : "var(--chakra-colors-cyan-emphasized)"} overflow="hidden">
         {statsItems.map((item) => (
-          <Box key={item.label} textAlign="center" flex="1" color={"white"} py={6}>
+          <Box key={item.label} textAlign="center" flex="1" color="var(--chakra-colors-white)" py={6}>
             <Text fontSize="3xl" fontWeight="bold">{item.description}</Text>
             <Text fontSize="lg">{item.label}</Text>
           </Box>

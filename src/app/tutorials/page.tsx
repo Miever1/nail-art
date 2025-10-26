@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Box, SimpleGrid, Card, Image, Float, Tag, Text, Container, Button } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import PageHero from "@/components/customize/PageHero";
 import TutorialsList from "./tutorials-list";
 
