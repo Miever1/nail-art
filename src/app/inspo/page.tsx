@@ -12,11 +12,6 @@ const InspoPage: FunctionComponent = () => {
                 subtitle="Styles to spark your next creation"
             />
             <MasonrySection reactive={true} />
-            <Container centerContent>
-                <Button colorPalette="cyan" variant="surface">
-                    View More
-                </Button>
-            </Container>
         </Box>
     );
 };
