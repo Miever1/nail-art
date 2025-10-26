@@ -6,7 +6,6 @@ import {
   Box,
   Flex,
   Text,
-  Tag,
   Image,
   Heading,
   IconButton,
@@ -19,9 +18,20 @@ import {
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  author?: string;
+  tag?: string;
+  summary: string;
+  subtitle?: string;
+  imageUrl: string;
+  content?: string;
+}
+
 export type Comment = { id: string; name: string; text: string };
 
-export default function BlogDetailClient({ post }: { post: any }) {
+export default function BlogDetailClient({ post }: { post: BlogPost }) {
   const router = useRouter();
   const [liked, setLiked] = useState(false);
 
@@ -75,23 +85,21 @@ export default function BlogDetailClient({ post }: { post: any }) {
           <FaArrowLeft />
         </IconButton>
 
-        {post.tag && (
-          <Box
-            bg="teal.100"
-            color="black"
-            borderRadius="full"
-            w={8}
-            h={8}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            boxShadow="md"
-            cursor="pointer"
-            onClick={() => setLiked(!liked)}
-          >
-            {liked ? <FaThumbsUp /> : <FaRegThumbsUp />}
-          </Box>
-        )}
+        <Box
+          bg="teal.100"
+          color="black"
+          borderRadius="full"
+          w={8}
+          h={8}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          boxShadow="md"
+          cursor="pointer"
+          onClick={() => setLiked(!liked)}
+        >
+          {liked ? <FaThumbsUp /> : <FaRegThumbsUp />}
+        </Box>
       </Flex>
 
       <Box textAlign="center" mb={8}>
@@ -164,7 +172,7 @@ export default function BlogDetailClient({ post }: { post: any }) {
       </Flex>
 
       <Stack >
-        {comments.map((user, i) => (
+        {comments.map((user) => (
           <Box key={user.id}>
             <HStack align="flex-start" gap="4">
               <Avatar.Root size="md">

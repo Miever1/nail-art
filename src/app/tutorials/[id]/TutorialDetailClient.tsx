@@ -73,7 +73,7 @@ export default function TutorialDetailClient({ video }: { video: TutorialVideo }
 
         <Tabs.Content value="materials">
             <Box p={4}>
-            <Heading as="h3" size="sm" mb={2}>What You'll Need</Heading>
+            <Heading as="h3" size="sm" mb={2}>What You Will Need</Heading>
             <ul>
                 {video.materials?.map((item: string, index: number) => (
                 <li key={index}>
