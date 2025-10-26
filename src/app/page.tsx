@@ -12,11 +12,13 @@ import {
   Image,
   ScrollArea
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import MasonrySection from "@/components/customize/MasonrySection";
 import { videoInfo } from "./static-data/nail-info";
-
+import { blogPosts } from "./static-data/nail-info";
 
 export default function Home() {
+  const router = useRouter();
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const statsItems = [
     {
@@ -39,33 +41,35 @@ export default function Home() {
   return (
     <Box>
       <Stack>
-        <Box p="24">
+        <Box
+          bgImage="url('https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp')"
+          bgSize="clamp(400px, 35%, 55%)"
+          bgPos="95% bottom"
+          h="760px"
+          bgRepeat="no-repeat"
+          minH={{ base: "400px", md: "520px" }}
+          p={24}
+          borderRadius="xl"
+        >
           <Text fontSize={100} mb={32} fontWeight={600} fontFamily="cursive">
             Creativity at Your Fingertips.
           </Text>
-          <Box display="flex">
-            <Box minW="360px">
-              <Text fontSize={36} mb={16}>
-                Easy lessons, expert advice, and endless designs to bring your nail art vision to life.
-              </Text>
-              <Button colorPalette="cyan" variant="surface">
-                View More
-              </Button>
-            </Box>
-            <Image src="https://miever.s3.ap-east-1.amazonaws.com/static/nail-art/hand.webp" alt="Nail Art" minW="360px"/>
+          <Box maxW="600px">
+            <Text fontSize={36} mb={16}>
+              Easy lessons, expert advice, and endless designs to bring your nail art vision to life.
+            </Text>
           </Box>
         </Box>
-        
       </Stack>
-      <Stack direction="row" backgroundColor="#00B1F1">
+      <Stack direction="row" my={6} backgroundColor="#00B1F1" overflow="hidden">
         {statsItems.map((item) => (
-          <Box key={item.label} textAlign="center" flex="1" color={"white"} py={6}>
+          <Box key={item.label} textAlign="center" flex="1" color="var(--chakra-colors-white)" py={6}>
             <Text fontSize="3xl" fontWeight="bold">{item.description}</Text>
             <Text fontSize="lg">{item.label}</Text>
           </Box>
         ))}
         </Stack>
-      <Stack p="24">
+      <Stack p="12">
         <Box>
           <Box >
             <Text textStyle="xl" fontWeight={600}>For you</Text>
@@ -75,7 +79,7 @@ export default function Home() {
               <ScrollArea.Viewport>
                 <ScrollArea.Content py="4">
                     <Flex gap="4" flexWrap="nowrap">
-                      {videoInfo.map((item, index) => (
+                      {videoInfo.slice(0, 6).map((item, index) => (
                           <Card.Root key={index} minW="400px" maxW="400px">
                             <Card.Body>
                               <video 
@@ -107,7 +111,7 @@ export default function Home() {
           </Box>
         </Box>
       </Stack>
-      <Stack p="24">
+      <Stack p="12">
         <Card.Root flexDirection="row" overflow="hidden" border="none" bg="none">
           <Image
             objectFit="cover"
@@ -117,32 +121,48 @@ export default function Home() {
           />
           <Box p={12}>
             <Card.Body>
-              <Card.Title mb="2">Top Techniques of 2025</Card.Title>
+              <Card.Title mb="2">{blogPosts[0].title}</Card.Title>
               <Card.Description>
-                Discover the hottest nail art techniques taking 2025 by storm, from futuristic chrome finishes to playful 3D accents. This year’s trends balance bold creativity with simple, at-home-friendly methods that anyone can try.
+                {blogPosts[0].summary}
               </Card.Description>
               <HStack mt="4">
-                <Badge>Sabrina Smith</Badge>
+                <Badge>{blogPosts[0].author}</Badge>
               </HStack>
             </Card.Body>
             <Card.Footer>
-              <Button>View</Button>
+              <Button
+                colorPalette="cyan"
+                variant="surface"
+                onClick={() => {
+                  router.push(`/blog/${blogPosts[0].id}`);
+                }}
+              >
+                View
+              </Button>
             </Card.Footer>
           </Box>
         </Card.Root>
         <Card.Root flexDirection="row" overflow="hidden" border="none" bg="none">
           <Box p={12}>
             <Card.Body>
-              <Card.Title mb="2">Caring for your Cuticles</Card.Title>
+              <Card.Title mb="2">{blogPosts[1].title}</Card.Title>
               <Card.Description>
-                Healthy cuticles are the foundation of strong, beautiful nails, yet they’re often overlooked in nail care routines. In this post, we’ll share why cuticle care matters and the simple steps you can take to protect them.
+                {blogPosts[1].summary}
               </Card.Description>
               <HStack mt="4">
-                <Badge>Sabrina Smith</Badge>
+                <Badge>{blogPosts[1].author}</Badge>
               </HStack>
             </Card.Body>
             <Card.Footer>
-              <Button>View</Button>
+              <Button
+                colorPalette="cyan"
+                variant="surface"
+                onClick={() => {
+                  router.push(`/blog/${blogPosts[1].id}`);
+                }}
+              >
+                View
+              </Button>
             </Card.Footer>
           </Box>
           <Image
@@ -153,8 +173,8 @@ export default function Home() {
           />
         </Card.Root>
       </Stack>
-      <Stack p="24">
-        <MasonrySection />
+      <Stack p="12">
+        <MasonrySection maxItemNum={10} />
       </Stack>
     </Box>
   );

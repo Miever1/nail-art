@@ -8,6 +8,7 @@ import { ColorModeButton } from "@/components/ui/color-mode";
 import { Box, Flex, HStack, Text, Container, Field, Input, Group, Button } from "@chakra-ui/react";
 
 import { MenuBar } from "./MenuBar";
+import LoginDialog from "@/components/customize/LoginDialog";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Provider>
           <Box as="header">
@@ -47,9 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Box>
                 <Box>
                   <ColorModeButton />
-                  <NextLink href="/login" passHref>
-                    Login
-                  </NextLink>
+                  <LoginDialog />
                 </Box>
               </Flex>
             </Container>

@@ -11,8 +11,15 @@ export interface ColorModeProviderProps extends ThemeProviderProps {}
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
   return (
-    <ThemeProvider attribute="class" disableTransitionOnChange {...props} />
-  )
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="light"
+      enableSystem={true}
+      storageKey="nailart-theme"
+      disableTransitionOnChange
+      {...props}
+    />
+  );
 }
 
 export type ColorMode = "light" | "dark"

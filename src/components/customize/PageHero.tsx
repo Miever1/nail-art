@@ -1,7 +1,6 @@
 import React from "react";
-import { Flex, Heading, Text, Group, Input, IconButton, Tag } from "@chakra-ui/react";
+import { Flex, Heading, Text, Group, Input, Tag } from "@chakra-ui/react";
 
-import { FaFilter } from "react-icons/fa";
 
 interface PageHeroProps {
     title: string;
@@ -27,13 +26,6 @@ const PageHero: React.FC<PageHeroProps> = ({
             </Text>
             <Group w="full" maxW="sm" gap={4} py={8}>
                 <Input flex="1" placeholder="Search..." />
-                <IconButton
-                    aria-label="Search database"
-                    bg="none"
-                    color="var(--global-color-border)"
-                >
-                    <FaFilter />
-                </IconButton>
             </Group>
         </Flex>
     );

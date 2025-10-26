@@ -10,15 +10,20 @@ const Masonry = dynamic(() => import('react-layout-masonry'), { ssr: false });
 
 interface MasonrySectionProps {
     reactive?: boolean;
+    maxItemNum?: number;
 }
 
 const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
-    reactive = false
+    reactive = false,
+    maxItemNum
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeInfo, setActiveInfo] = useState<StructuedNailInfo | null>(null);
-
-    const data = nailInfo.map((item, index) => {
+    let structuedData = nailInfo;
+    if (maxItemNum && structuedData.length > maxItemNum) {
+        structuedData = structuedData.slice(0, maxItemNum);
+    }
+    const data = structuedData.map((item) => {
         const { title, imagesNum } = item;
         const structuedData = {
             title,
@@ -35,30 +40,42 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
         <Box my={16}>
             <Masonry columns={{ 640: 1, 768: 2, 1024: 3, 1280: 5 }} gap={16}>
             {data.map((item, index) => (
-                <Box key={index} mb="4" position="relative" cursor="pointer">
+                <Box key={index} mb="4" position="relative" cursor="pointer" w="294px" h="294px">
                     <Image
                         src={item.images[0].src}
                         alt={item.title}
-                        w="294px"
-                        h="294px"
+                        w="100%"
+                        h="100%"
+                        objectFit="cover"
+                        borderRadius="md"
                         onClick={() => {
-                            setIsOpen(true);
-                            setActiveInfo({ 
-                                like: index % 2 === 0,
-                                imagesNum: item.images.length,
-                                ...item
-                            });
+                        setIsOpen(true);
+                        setActiveInfo({
+                            like: index % 2 === 0,
+                            imagesNum: item.images.length,
+                            ...item
+                        });
                         }}
                     />
-                    {
-                        reactive ? (
-                            <Float right="6" top="6">
-                                <Box borderRadius="50%" w={8} h={8} bg="var(--chakra-colors-white)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
-                                    {index % 2 === 0 ? <FaHeart /> : <FaRegHeart />}
-                                </Box>
-                            </Float>
-                        ) : null
-                    }
+                    {reactive && (
+                        <Box
+                            position="absolute"
+                            top="8px"
+                            right="8px"
+                            bg="var(--chakra-colors-white)"
+                            color="var(--chakra-colors-black)"
+                            borderRadius="full"
+                            w={8}
+                            h={8}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            boxShadow="md"
+                            cursor="pointer"
+                        >
+                            {index % 2 === 0 ? <FaHeart /> : <FaRegHeart />}
+                        </Box>
+                    )}
                 </Box>
             ))} 
             </Masonry>
@@ -92,13 +109,13 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                             </Drawer.Header>
                             <Drawer.Body>
                                 <Box mb="4" position="relative">
-                                    <Image
-                                        src={activeInfo?.images[0].src || ''}
-                                        alt="Nail Art"
-                                        onClick={() => {
-                                            setIsOpen(true);
-                                        }}
-                                    />
+                                    {activeInfo?.images?.[0]?.src && (
+                                        <Image
+                                            src={activeInfo.images[0].src}
+                                            alt="Nail Art"
+                                            onClick={() => setIsOpen(true)}
+                                        />
+                                    )}
                                     <Float right="8" top="8">
                                         <Box borderRadius="50%" w={8} h={8} bg="var(--chakra-colors-white)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
                                             {activeInfo?.like ? <FaHeart /> : <FaRegHeart />}
