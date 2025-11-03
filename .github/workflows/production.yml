@@ -19,7 +19,7 @@ jobs:
 
       - name: Build Next.js project
         env:
-          NEXT_PUBLIC_API_URL: https://api-nail-art.miever.net
+          NEXT_PUBLIC_API_URL: https://api-nail-art.miever.net/api
         run: npm run build
 
       - uses: wlixcc/SFTP-Deploy-Action@v1.0 
