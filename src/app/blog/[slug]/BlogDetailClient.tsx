@@ -18,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { api } from "@/shared/lib/api";
 import { FaArrowLeft, FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
-import { useLoadingStore } from "@/shared/store/useLoadingStore";
 import { toaster } from "@/components/ui/toaster";
 import { useCurrentUser } from "@/shared/lib/useCurrentUser";
 
@@ -66,7 +65,6 @@ export default function BlogDetailClient({ post }: { post: BlogPost }) {
   const router = useRouter();
   const { data: currentUser } = useCurrentUser();
   const currentUserId = currentUser?.id;
-  const { setLoading } = useLoadingStore();
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [commentLoading, setCommentLoading] = useState(false);
   const [liked, setLiked] = useState(false);
