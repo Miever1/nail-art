@@ -4,41 +4,44 @@ import BlogDetailClient from "./BlogDetailClient";
 
 type PageProps = { params: { slug: string } };
 
-export default async function BlogDetailPage({ params }: PageProps) {
-  const { slug } = params;
+// 可选：给一组兜底的 slug，防止构建时接口短暂不可达导致为空
+const FALLBACK_SLUGS = ["top-10-nail-art-trends-2024"];
 
-  // ✅ 建议优先用仅服务器可见的环境变量（没有就回退到 public）
-  const base =
-    process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
-
-  if (!base) {
-    console.error("API base URL is not set");
-    return notFound();
-  }
+export async function generateStaticParams() {
+  const base = process.env.NEXT_PUBLIC_API_URL;
+  if (!base) return FALLBACK_SLUGS.map((slug) => ({ slug }));
 
   try {
-    // ✅ 服务端请求后端，不受 CORS 影响
-    const res = await fetch(`${base}/blog/by-slug/${encodeURIComponent(slug)}`, {
-      // 强制每次到后端取
-      cache: "no-store",
-      // 如果后端用自签证书，必要时加上：
-      // next: { revalidate: 0 },
-    });
-
-    if (!res.ok) {
-      console.error("Fetch failed:", res.status, await res.text());
-      return notFound();
-    }
-
-    const post = await res.json();
-    if (!post) return notFound();
-
-    return <BlogDetailClient post={post} />;
-  } catch (err) {
-    console.error("Failed to fetch blog by slug:", err);
-    return notFound();
+    // 静态导出阶段：必须可缓存，不能 no-store
+    const res = await fetch(`${base}/blog`, { cache: "force-cache" });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    const posts: Array<{ slug: string }> = await res.json();
+    const slugs = posts?.map((p) => p.slug).filter(Boolean) ?? [];
+    // 确保至少有一个，避免“必须有 generateStaticParams”的报错
+    return (slugs.length ? slugs : FALLBACK_SLUGS).map((slug) => ({ slug }));
+  } catch {
+    // 接口挂了也要兜底，保证构建能继续
+    return FALLBACK_SLUGS.map((slug) => ({ slug }));
   }
 }
 
-// ✅ 明确告诉 Next 这是动态页面（配合去掉 output: "export"）
-export const dynamic = "force-dynamic";
+export const dynamicParams = false; // 告诉 Next 只有上面那些 slug
+
+export default async function BlogDetailPage({ params }: PageProps) {
+  const { slug } = params;
+  const base = process.env.NEXT_PUBLIC_API_URL;
+  if (!base) return notFound();
+
+  try {
+    // 这里同样不要 no-store（静态导出期不允许）
+    const res = await fetch(`${base}/blog/by-slug/${encodeURIComponent(slug)}`, {
+      cache: "force-cache",
+    });
+    if (!res.ok) return notFound();
+    const post = await res.json();
+    if (!post) return notFound();
+    return <BlogDetailClient post={post} />;
+  } catch {
+    return notFound();
+  }
+}
