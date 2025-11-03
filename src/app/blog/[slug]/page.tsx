@@ -21,8 +21,10 @@ export async function generateStaticParams() {
   try {
     const res = await api.get("/blog");
     const posts: Array<{ slug: string }> = res.data ?? [];
+    console.log("Posts:", posts.map(p => p.slug));
     return posts.map((p) => ({ slug: p.slug }));
-  } catch {
-    return []; // 构建兜底，不要抛错
+  } catch (e) {
+    console.warn("generateStaticParams: fallback to [] due to fetch error", e);
+    return [];
   }
 }
