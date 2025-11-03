@@ -2,11 +2,10 @@ import { notFound } from "next/navigation";
 import BlogDetailClient from "./BlogDetailClient";
 import { api } from "@/shared/lib/api";
 
-type PageProps = { params: Promise<{ slug: string }> };
+type PageProps = { params: { slug: string } };
 
-export default async function BlogDetailPage(props: PageProps) {
-  const { slug } = await props.params;
-
+export default async function BlogDetailPage({ params }: PageProps) {
+  const { slug } = params;
   try {
     const res = await api.get(`/blog/by-slug/${slug}`);
     const post = res.data;
@@ -24,6 +23,6 @@ export async function generateStaticParams() {
     const posts: Array<{ slug: string }> = res.data ?? [];
     return posts.map((p) => ({ slug: p.slug }));
   } catch {
-    return [];
+    return []; // 构建兜底，不要抛错
   }
 }
