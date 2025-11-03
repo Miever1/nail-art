@@ -28,26 +28,5 @@ export default async function BlogDetailPage({ params }: PageProps) {
   }
 }
 
-export async function generateStaticParams() {
-  const base = process.env.NEXT_PUBLIC_API_URL;
-
-  const FALLBACK_SLUGS = ["top-10-nail-art-trends-2024"];
-
-  if (!base) {
-    console.warn("generateStaticParams: base URL missing, using fallback slugs");
-    return FALLBACK_SLUGS.map((slug) => ({ slug }));
-  }
-
-  try {
-    const res = await fetch(`${base}/blog`, { cache: "no-store" });
-    if (!res.ok) throw new Error(`status ${res.status}`);
-    const posts: Array<{ slug: string }> = await res.json();
-    console.log("Posts:", posts.map((p) => p.slug));
-    return posts.map((p) => ({ slug: p.slug }));
-  } catch (e) {
-    console.warn("generateStaticParams: fallback to [] -> using fallback slugs", e);
-    return FALLBACK_SLUGS.map((slug) => ({ slug }));
-  }
-}
-
-export const dynamicParams = false;
+// ✅ 强制动态渲染（运行时加载，不静态导出）
+export const dynamic = "force-dynamic";
