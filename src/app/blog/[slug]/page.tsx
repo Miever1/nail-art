@@ -1,48 +1,44 @@
+// app/blog/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import BlogDetailClient from "./BlogDetailClient";
 
 type PageProps = { params: { slug: string } };
 
-// Make this segment static-friendly for `output: "export"`
-export const dynamic = "force-static";          // Ensures no dynamic rendering
-export const dynamicParams = false;             // Only build the slugs we return
-export const revalidate = false;                // or a number (e.g. 60) if you want ISR
+export default async function BlogDetailPage({ params }: PageProps) {
+  const { slug } = params;
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE!; // e.g. "https://api.yoursite.com"
+  // ✅ 建议优先用仅服务器可见的环境变量（没有就回退到 public）
+  const base =
+    process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
 
-// --- Data helpers using Next's fetch ---
-async function getAllSlugs() {
+  if (!base) {
+    console.error("API base URL is not set");
+    return notFound();
+  }
+
   try {
-    const res = await fetch(`${API_BASE}/blog`, {
-      // For export builds, avoid runtime caching signals unless you want ISR.
-      // next: { revalidate: 60 }, // Uncomment if you want ISR
-      cache: "force-cache",
+    // ✅ 服务端请求后端，不受 CORS 影响
+    const res = await fetch(`${base}/blog/by-slug/${encodeURIComponent(slug)}`, {
+      // 强制每次到后端取
+      cache: "no-store",
+      // 如果后端用自签证书，必要时加上：
+      // next: { revalidate: 0 },
     });
-    if (!res.ok) return [];
-    const posts: Array<{ slug: string }> = await res.json();
-    return posts.map((p) => ({ slug: p.slug }));
-  } catch {
-    return [];
+
+    if (!res.ok) {
+      console.error("Fetch failed:", res.status, await res.text());
+      return notFound();
+    }
+
+    const post = await res.json();
+    if (!post) return notFound();
+
+    return <BlogDetailClient post={post} />;
+  } catch (err) {
+    console.error("Failed to fetch blog by slug:", err);
+    return notFound();
   }
 }
 
-async function getPost(slug: string) {
-  const res = await fetch(`${API_BASE}/blog/by-slug/${slug}`, {
-    // next: { revalidate: 60 }, // ISR option
-    cache: "force-cache",
-  });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error("Failed to fetch post");
-  return res.json();
-}
-
-// --- Required for `output: "export"` on a dynamic route ---
-export async function generateStaticParams() {
-  return await getAllSlugs();
-}
-
-export default async function BlogDetailPage({ params }: PageProps) {
-  const post = await getPost(params.slug);
-  if (!post) return notFound();
-  return <BlogDetailClient post={post} />;
-}
+// ✅ 明确告诉 Next 这是动态页面（配合去掉 output: "export"）
+export const dynamic = "force-dynamic";
