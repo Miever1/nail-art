@@ -18,4 +18,12 @@ export default async function BlogDetailPage(props: PageProps) {
   }
 }
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  try {
+    const res = await api.get("/blog");
+    const posts: Array<{ slug: string }> = res.data ?? [];
+    return posts.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
