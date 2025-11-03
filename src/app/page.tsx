@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { 
   Box, 
   Flex,
@@ -15,11 +15,39 @@ import {
 import { useRouter } from "next/navigation";
 import MasonrySection from "@/components/customize/MasonrySection";
 import { videoInfo } from "./static-data/nail-info";
-import { blogPosts } from "./static-data/nail-info";
+import { useLoadingStore } from "@/shared/store/useLoadingStore";
+import { api } from "@/shared/lib/api";
+import { toaster } from "@/components/ui/toaster";
+import { BlogPost } from "@/app/blog/[slug]/BlogDetailClient";
 
 export default function Home() {
   const router = useRouter();
+  const { setLoading } = useLoadingStore();
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  console.log("Posts:", posts);
+
+  const getBlogPosts = () => {
+      setLoading(true);
+      api.get("/blog").then((response) => {
+          setPosts(response.data);
+          setLoading(false);
+      }).catch(() => {
+          setLoading(false);
+          setPosts([]);
+          toaster.create({
+              title: "Failed to load blog posts",
+              description: "Please try again later",
+              type: "error",
+          });
+      });
+    }
+
+    useEffect(() => {
+        getBlogPosts();
+    }, []);
+
   const statsItems = [
     {
       label: "Tutorials",
@@ -121,12 +149,12 @@ export default function Home() {
           />
           <Box p={12}>
             <Card.Body>
-              <Card.Title mb="2">{blogPosts[0].title}</Card.Title>
+              <Card.Title mb="2">{posts[0]?.title}</Card.Title>
               <Card.Description>
-                {blogPosts[0].summary}
+                {posts[0]?.summary}
               </Card.Description>
               <HStack mt="4">
-                <Badge>{blogPosts[0].author}</Badge>
+                <Badge>{posts[0]?.author}</Badge>
               </HStack>
             </Card.Body>
             <Card.Footer>
@@ -134,7 +162,7 @@ export default function Home() {
                 colorPalette="cyan"
                 variant="surface"
                 onClick={() => {
-                  router.push(`/blog/${blogPosts[0].id}`);
+                  router.push(`/blog/${posts[0]?.slug}`);
                 }}
               >
                 View
@@ -145,12 +173,12 @@ export default function Home() {
         <Card.Root flexDirection="row" overflow="hidden" border="none" bg="none">
           <Box p={12}>
             <Card.Body>
-              <Card.Title mb="2">{blogPosts[1].title}</Card.Title>
+              <Card.Title mb="2">{posts[1]?.title}</Card.Title>
               <Card.Description>
-                {blogPosts[1].summary}
+                {posts[1]?.summary}
               </Card.Description>
               <HStack mt="4">
-                <Badge>{blogPosts[1].author}</Badge>
+                <Badge>{posts[1]?.author}</Badge>
               </HStack>
             </Card.Body>
             <Card.Footer>
@@ -158,7 +186,7 @@ export default function Home() {
                 colorPalette="cyan"
                 variant="surface"
                 onClick={() => {
-                  router.push(`/blog/${blogPosts[1].id}`);
+                  router.push(`/blog/${posts[1]?.slug}`);
                 }}
               >
                 View

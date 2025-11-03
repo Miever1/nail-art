@@ -57,7 +57,7 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                         });
                         }}
                     />
-                    {reactive && (
+                    {/* {reactive && (
                         <Box
                             position="absolute"
                             top="8px"
@@ -75,7 +75,7 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                         >
                             {index % 2 === 0 ? <FaHeart /> : <FaRegHeart />}
                         </Box>
-                    )}
+                    )} */}
                 </Box>
             ))} 
             </Masonry>
@@ -116,11 +116,11 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                                             onClick={() => setIsOpen(true)}
                                         />
                                     )}
-                                    <Float right="8" top="8">
+                                    {/* <Float right="8" top="8">
                                         <Box borderRadius="50%" w={8} h={8} bg="var(--chakra-colors-white)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
                                             {activeInfo?.like ? <FaHeart /> : <FaRegHeart />}
                                         </Box>
-                                    </Float>
+                                    </Float> */}
                                 </Box>
                                 <Heading mb="4" size="2xl">
                                     Details
