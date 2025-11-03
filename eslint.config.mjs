@@ -23,6 +23,7 @@ const eslintConfig = [
   {
     rules: {
       "@typescript-eslint/no-empty-object-type": "off", // 或 "warn"
+      "@typescript-eslint/no-explicit-any": "off"
     },
   },
 ];

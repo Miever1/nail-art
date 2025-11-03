@@ -1,9 +1,9 @@
 "use client";
 import React, { FunctionComponent, useState } from "react";
 import dynamic from "next/dynamic";
-import { Box, Image, Float, Drawer, Portal, Avatar, Text, HStack, Stack, Heading, SimpleGrid } from "@chakra-ui/react";
-import { FaHeart } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa";
+import { Box, Image, Drawer, Portal, Avatar, Text, HStack, Stack, Heading, SimpleGrid } from "@chakra-ui/react";
+// import { FaHeart } from "react-icons/fa";
+// import { FaRegHeart } from "react-icons/fa";
 import { nailInfo, StructuedNailInfo } from "../../app/static-data/nail-info";
 
 const Masonry = dynamic(() => import('react-layout-masonry'), { ssr: false });
@@ -14,7 +14,7 @@ interface MasonrySectionProps {
 }
 
 const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
-    reactive = false,
+    // reactive = false,
     maxItemNum
 }) => {
     const [isOpen, setIsOpen] = useState(false);
