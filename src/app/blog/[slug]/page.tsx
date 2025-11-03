@@ -3,30 +3,46 @@ import BlogDetailClient from "./BlogDetailClient";
 
 type PageProps = { params: { slug: string } };
 
-export default async function BlogDetailPage({ params }: PageProps) {
-  const { slug } = params;
-  const base = process.env.NEXT_PUBLIC_API_URL;
+// Make this segment static-friendly for `output: "export"`
+export const dynamic = "force-static";          // Ensures no dynamic rendering
+export const dynamicParams = false;             // Only build the slugs we return
+export const revalidate = false;                // or a number (e.g. 60) if you want ISR
 
-  if (!base) {
-    console.error("NEXT_PUBLIC_API_URL is not set.");
-    return notFound();
-  }
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE!; // e.g. "https://api.yoursite.com"
 
+// --- Data helpers using Next's fetch ---
+async function getAllSlugs() {
   try {
-    const res = await fetch(`${base}/blog/by-slug/${slug}`, {
-      cache: "no-store",
+    const res = await fetch(`${API_BASE}/blog`, {
+      // For export builds, avoid runtime caching signals unless you want ISR.
+      // next: { revalidate: 60 }, // Uncomment if you want ISR
+      cache: "force-cache",
     });
-
-    if (!res.ok) return notFound();
-    const post = await res.json();
-    if (!post) return notFound();
-
-    return <BlogDetailClient post={post} />;
-  } catch (err) {
-    console.error("Failed to fetch blog by slug:", err);
-    return notFound();
+    if (!res.ok) return [];
+    const posts: Array<{ slug: string }> = await res.json();
+    return posts.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
   }
 }
 
-// ✅ 强制动态渲染（运行时加载，不静态导出）
-export const dynamic = "force-dynamic";
+async function getPost(slug: string) {
+  const res = await fetch(`${API_BASE}/blog/by-slug/${slug}`, {
+    // next: { revalidate: 60 }, // ISR option
+    cache: "force-cache",
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error("Failed to fetch post");
+  return res.json();
+}
+
+// --- Required for `output: "export"` on a dynamic route ---
+export async function generateStaticParams() {
+  return await getAllSlugs();
+}
+
+export default async function BlogDetailPage({ params }: PageProps) {
+  const post = await getPost(params.slug);
+  if (!post) return notFound();
+  return <BlogDetailClient post={post} />;
+}
