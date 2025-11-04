@@ -1,9 +1,9 @@
 "use client";
 import React, { FunctionComponent, useState } from "react";
 import dynamic from "next/dynamic";
-import { Box, Image, Float, Drawer, Portal, Avatar, Text, HStack, Stack, Heading, SimpleGrid } from "@chakra-ui/react";
-import { FaHeart } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa";
+import { Box, Image, Drawer, Portal, Avatar, Text, HStack, Stack, Heading, SimpleGrid } from "@chakra-ui/react";
+// import { FaHeart } from "react-icons/fa";
+// import { FaRegHeart } from "react-icons/fa";
 import { nailInfo, StructuedNailInfo } from "../../app/static-data/nail-info";
 
 const Masonry = dynamic(() => import('react-layout-masonry'), { ssr: false });
@@ -14,7 +14,7 @@ interface MasonrySectionProps {
 }
 
 const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
-    reactive = false,
+    // reactive = false,
     maxItemNum
 }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +57,7 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                         });
                         }}
                     />
-                    {reactive && (
+                    {/* {reactive && (
                         <Box
                             position="absolute"
                             top="8px"
@@ -75,7 +75,7 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                         >
                             {index % 2 === 0 ? <FaHeart /> : <FaRegHeart />}
                         </Box>
-                    )}
+                    )} */}
                 </Box>
             ))} 
             </Masonry>
@@ -116,11 +116,11 @@ const MasonrySection: FunctionComponent<MasonrySectionProps> = ({
                                             onClick={() => setIsOpen(true)}
                                         />
                                     )}
-                                    <Float right="8" top="8">
+                                    {/* <Float right="8" top="8">
                                         <Box borderRadius="50%" w={8} h={8} bg="var(--chakra-colors-white)" alignItems="center" justifyContent="center" display="flex" boxShadow="md" cursor="pointer">
                                             {activeInfo?.like ? <FaHeart /> : <FaRegHeart />}
                                         </Box>
-                                    </Float>
+                                    </Float> */}
                                 </Box>
                                 <Heading mb="4" size="2xl">
                                     Details
